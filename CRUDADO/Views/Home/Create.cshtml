@@ -1,0 +1,163 @@
+﻿@model QRCODE
+@{
+    Layout = "_Layout";
+
+}
+
+<h2><marquee>Generate & Read QR Code</marquee></h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form_main">
+                <h4 class="heading"><strong>Generate </strong> QR Code <span></span></h4>
+                <div class="form">
+                    <form>
+                        <input type="text" id="textInput" class="txt">
+
+                        <input type="button" onclick="updateQR()" value="Generate" name="submit" class="btn btn-primary">
+
+                    </form>
+                    <br />
+                    <img id="image" src="" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form_main">
+                <h4 class="heading"><strong>Read </strong> QR Code <span></span></h4>
+                <div class="form">
+                    <form id="uploadForm" action="http://api.qrserver.com/v1/read-qr-code/" method="post" enctype="multipart/form-data" accept-charset="ISO-8859-1">
+
+                        <div class="inputFileCustom">
+                            <input type="file" size="45" name="file" id="uploadFiles" />
+                            <label for="uploadFiles">
+                                <div class="ic-bt ic-bt-details ic-bt-text btn btn-border">
+                                    Choose a file
+                                </div>
+                            </label>
+                        </div>
+
+                        <input type="submit" value="Read QR Code" class="btn btn-primary" />
+                    </form>
+                    <br />
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<style>
+
+    .input-validation-error {
+        border-color: red;
+    }
+
+    form_main {
+        width: 100%;
+    }
+
+    .form_main h4 {
+        font-family: roboto;
+        font-size: 20px;
+        font-weight: 300;
+        margin-bottom: 15px;
+        margin-top: 20px;
+        text-transform: uppercase;
+    }
+
+    .heading {
+        border-bottom: 1px solid #fcab0e;
+        padding-bottom: 9px;
+        position: relative;
+    }
+
+        .heading span {
+            background: #9e6600 none repeat scroll 0 0;
+            bottom: -2px;
+            height: 3px;
+            left: 0;
+            position: absolute;
+            width: 75px;
+        }
+
+    .form {
+        border-radius: 7px;
+        padding: 6px;
+    }
+
+    .txt[type="text"] {
+        border: 1px solid #ccc;
+        margin: 10px 0;
+        padding: 10px 0 10px 5px;
+        width: 100%;
+    }
+
+    .txt_3[type="text"] {
+        margin: 10px 0 0;
+        padding: 10px 0 10px 5px;
+        width: 100%;
+    }
+
+    .txt2[type="submit"] {
+        background: #242424 none repeat scroll 0 0;
+        border: 1px solid #4f5c04;
+        border-radius: 25px;
+        color: #fff;
+        font-size: 16px;
+        font-style: normal;
+        line-height: 35px;
+        margin: 10px 0;
+        padding: 0;
+        text-transform: uppercase;
+        width: 30%;
+    }
+
+    .txt2:hover {
+        background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+        color: #5793ef;
+        transition: all 0.5s ease 0s;
+    }
+</style>
+
+<script>
+
+    function updateQR() {
+        document.getElementById('image').src = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(document.getElementById('textInput').value) + "&size=100x100";
+
+    }
+    // Attach a submit handler to the form
+    // Attach a submit handler to the form
+
+
+    $("#uploadForm").submit(function (event) {
+        debugger
+        var formData = new FormData();
+        formData.append("uploadFiles", $('[name="file"]')[0].files[0]);
+        event.stopPropagation();
+        event.preventDefault();
+        $.ajax({
+            url: $(this).attr("action"),
+            data: formData,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (data) {
+                alert(data);
+                loadFiles()
+            }
+        });
+        return false;
+    });
+
+</script>
+
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+<script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
